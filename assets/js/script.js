@@ -79,7 +79,7 @@ function displayForecast(weatherObj){
 
         // create a container for each day
         var forecastEl = document.createElement("div");
-        forecastEl.classList = "col-2 col-md-2 card card-body bg-primary text-light justify-space-between ml-2 mt-4 justify-content-left";
+        forecastEl.classList = "col-12 col-md-2 card card-body bg-primary text-light justify-space-between ml-4 mt-4 justify-content-left";
 
         // create a h5 element to hold the date
         var dateEl = document.createElement("h5");
