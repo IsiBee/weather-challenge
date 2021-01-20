@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +10,12 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" />
     <link rel="stylesheet" href="assets/css/style.css" />
 </head>
+
 <body>
     <header class="nav bg-dark text-light justify-content-center">
         <h1>The Weather Vane</h1>
     </header>
-    
+
     <main class="row justify-space-between">
         <div class="col-12 col-md-4">
             <div class="card">
@@ -22,12 +24,14 @@
                     <input />
                     <button>Search</button>
                 </form>
-            </div> 
+            </div>
         </div>
         <div class="col-12 col-md-8 mt-4">
             <div class="card">
                 <div id="current-weather" class="card-body">
                 </div>
+            </div>
+            <div id="forecast-container" class="row mt-2">
             </div>
         </div>
     </main>
@@ -37,4 +41,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="assets/js/script.js"></script>
 </body>
+
 </html>
