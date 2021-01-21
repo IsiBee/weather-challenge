@@ -149,8 +149,12 @@ function addSearchHistory(city) {
     // add city to the screen
     cityListEl.appendChild(saveCity);
 
-
 };
+
+function savedCitySearch(event){
+    var city = event.target.textContent;
+    getCoordinates(city);
+}
 
 // When the user clicks search the contents of the form will be used to getCoordinates.
 function formSubmitHandler(event) {
@@ -172,5 +176,6 @@ function formSubmitHandler(event) {
 };
 
 cityFormEl.addEventListener("submit", formSubmitHandler);
+cityListEl.addEventListener("click", savedCitySearch);
 
-getCoordinates("Austin");
+getCoordinates("Salt Lake City");
