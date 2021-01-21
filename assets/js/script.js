@@ -2,6 +2,9 @@
 var currWeatherContainerEl = document.querySelector("#current-weather");
 var foreCastContainerEl = document.querySelector("#forecast-container");
 
+var cityFormEl = document.querySelector("#city-form");
+var cityInputEl = document.querySelector("#city-search");
+
 
 // Uses the Current Weather API to get the city lon and lat coordinates
 function getCoordinates(city) {
@@ -103,5 +106,20 @@ function displayForecast(weatherObj){
     }
 
 };
+
+function formSubmitHandler(event) {
+    event.preventDefault();
+    // get value from input element
+    var city = cityInputEl.value.trim();
+    if(city){
+        getCoordinates(city);
+        cityInputEl.value = "";
+    }
+    else{
+        alert("Please enter a city name");
+    }
+};
+
+cityFormEl.addEventListener("submit", formSubmitHandler);
 
 getCoordinates("Austin");

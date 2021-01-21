@@ -18,11 +18,15 @@
 
     <main class="row justify-space-between">
         <div class="col-12 col-md-4">
-            <div class="card">
-                <h4 class="card-header">Search for a City:</h4>
-                <form>
-                    <input />
-                    <button>Search</button>
+            <div class="card card-header">
+                <h4>Search for a City:</h4>
+                <form id="city-form" class="row">
+                    <div class="col-8 form-inline input-group">
+                            <input type="text" class="form-control" id="city-search" placeholder="City"/>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
