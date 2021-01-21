@@ -1,9 +1,10 @@
 
 var currWeatherContainerEl = document.querySelector("#current-weather");
-var foreCastContainerEl = document.querySelector("#forecast-container");
+var forecastContainerEl = document.querySelector("#forecast-container");
 
 var cityFormEl = document.querySelector("#city-form");
 var cityInputEl = document.querySelector("#city-search");
+var cityListEl = document.querySelector("#city-list");
 
 
 // Uses the Current Weather API to get the city lon and lat coordinates
@@ -81,14 +82,14 @@ function displayCurrentWeather(weatherObj, city) {
 // Display 5 Day Weather forecast
 function displayForecast(weatherObj) {
     // clear old content
-    foreCastContainerEl.textContent = "";
+    forecastContainerEl.textContent = "";
 
     // create title h4 element
     var titleEl = document.createElement("h4");
     titleEl.classList = "col-12 col-md-12 mt-3"
     titleEl.textContent = "5 Day Forecast: "
 
-    foreCastContainerEl.appendChild(titleEl);
+    forecastContainerEl.appendChild(titleEl);
 
     for (var i = 1; i < (weatherObj.length - 2); i++) {
         // format date
@@ -106,12 +107,14 @@ function displayForecast(weatherObj) {
         var forecastIcon = weatherObj[i].weather[0].icon;
         var forecastAlt = weatherObj[i].weather[0].description;
         var forecastIconSrc = "http://openweathermap.org/img/wn/" + forecastIcon + "@2x.png";
+
         // create img element to hold icon
         var iconEl = document.createElement("img");
         iconEl.setAttribute("src", forecastIconSrc);
         iconEl.setAttribute("alt", forecastAlt);
         iconEl.setAttribute("width", "75px");
         iconEl.setAttribute("height", "75px");
+
         // create span element to format icon
         var iconContainerEl = document.createElement("span");
         iconContainerEl.classList = "d-flex align-self-md-center align-self-sm-start";
@@ -132,8 +135,20 @@ function displayForecast(weatherObj) {
         forecastEl.appendChild(humidityEl);
 
         // append to the page
-        foreCastContainerEl.appendChild(forecastEl);
+        forecastContainerEl.appendChild(forecastEl);
     }
+
+};
+
+function addSearchHistory(city) {
+    // create a list element
+    var saveCity = document.createElement("li");
+    saveCity.classList = "list-group-item";
+    saveCity.textContent = city;
+
+    // add city to the screen
+    cityListEl.appendChild(saveCity);
+
 
 };
 
@@ -146,6 +161,7 @@ function formSubmitHandler(event) {
         // if not null pass input into getCoordinates 
         // Note this does not check whether city is a valid city
         getCoordinates(city);
+        addSearchHistory(city);
         // clear form 
         cityInputEl.value = "";
     }
