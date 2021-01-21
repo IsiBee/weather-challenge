@@ -96,7 +96,7 @@ function displayForecast(weatherObj) {
 
         // create a container for each day
         var forecastEl = document.createElement("div");
-        forecastEl.classList = "col-12 col-md-2 card card-body bg-primary text-light justify-space-between ml-4 mt-4 justify-content-left";
+        forecastEl.classList = "col-12 col-md-2 card card-body bg-primary text-light justify-space-between ml-4 mt-4 justify-content-center";
 
         // create a h5 element to hold the date
         var dateEl = document.createElement("h5");
@@ -110,6 +110,12 @@ function displayForecast(weatherObj) {
         var iconEl = document.createElement("img");
         iconEl.setAttribute("src", forecastIconSrc);
         iconEl.setAttribute("alt", forecastAlt);
+        iconEl.setAttribute("width", "75px");
+        iconEl.setAttribute("height", "75px");
+        // create span element to format icon
+        var iconContainerEl = document.createElement("span");
+        iconContainerEl.classList = "d-flex align-self-md-center align-self-sm-start";
+        iconContainerEl.appendChild(iconEl);
 
         // create a span element to hold the temp
         var tempEl = document.createElement("span");
@@ -121,7 +127,7 @@ function displayForecast(weatherObj) {
 
         // append to container
         forecastEl.appendChild(dateEl);
-        forecastEl.appendChild(iconEl);
+        forecastEl.appendChild(iconContainerEl);
         forecastEl.appendChild(tempEl);
         forecastEl.appendChild(humidityEl);
 
