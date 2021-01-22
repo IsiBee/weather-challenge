@@ -13,9 +13,28 @@ function getCoordinates(city) {
     fetch(apiUrl).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
-                getWeather(data.coord.lon, data.coord.lat, city);
+                debugger;
+                var cityString = city.split(",")[0];
+                var stateString = city.split(",")[1];
+                var stringy = cityString + ", " + stateString;
+                if(stateString === "undefined"){
+                    getWeather(data.coord.lon, data.coord.lat, cityString);
+                    addSearchHistory(cityString);
+                }
+                else{
+                    getWeather(data.coord.lon, data.coord.lat, stringy);
+                    addSearchHistory(stringy);
+                }
+                
             });
         }
+        else {
+            var cityString = city.split(",")[0];
+            alert("Hmmm we can't seem to find " + cityString + " on the map. Please try another city.");
+        }
+    })
+    .catch(function(error){
+        alert("We are unable to connect to OpenWeather's Weather Vane at the moment.");
     });
 };
 
@@ -29,11 +48,18 @@ function getWeather(lon, lat, city) {
                 displayForecast(data.daily);
             });
         }
+        // This case will likely never fire as it should have been caught in the getCoordinates function.
+        else {
+            alert("Please enter a valid city name");
+        }
+    })
+    .catch(function(error){
+        alert("We are unable to connect to OpenWeather.")
     });
 };
 
 // Display Current Weather to the screen
-function displayCurrentWeather(weatherObj, city) {
+function displayCurrentWeather(weatherObj, cityString) {
     // clear old content
     currWeatherContainerEl.textContent = "";
 
@@ -55,7 +81,7 @@ function displayCurrentWeather(weatherObj, city) {
 
     // create city/date h3 element
     var titleEl = document.createElement("h3");
-    titleEl.textContent = city + " (" + date + ")";
+    titleEl.textContent = cityString + " (" + date + ")";
 
     // create weather elements
     var tempEl = document.createElement("p");
@@ -87,7 +113,8 @@ function displayCurrentWeather(weatherObj, city) {
     currWeatherContainerEl.appendChild(uviEl);
 };
 
-
+// Takes in a UV Index and determines whether it's low, moderate, or high
+// The function returns Bootstrap class names to properly color the span element.
 function uvScale(uvIndex){
     if(Math.floor(uvIndex) <= 2){
         return "bg-success text-light";
@@ -118,7 +145,7 @@ function displayForecast(weatherObj) {
 
         // create a container for each day
         var forecastEl = document.createElement("div");
-        forecastEl.classList = "col-12 col-md-2 card card-body bg-primary text-light justify-space-between ml-4 mt-4 justify-content-center";
+        forecastEl.classList = "col-12 col-md-2 card card-body forecast-bg text-light justify-space-between ml-4 mt-4 justify-content-center";
 
         // create a h5 element to hold the date
         var dateEl = document.createElement("h6");
@@ -177,19 +204,25 @@ function addSearchHistory(city) {
 // when the user clicks on a saved city the app will get the city's weather 
 function savedCitySearch(event){
     var city = event.target.textContent;
-    getCoordinates(city);
+    var queryString = city + ", US";
+    getCoordinates(queryString);
 }
 
 // When the user clicks search the contents of the form will be used to getCoordinates.
 function formSubmitHandler(event) {
     event.preventDefault();
     // get value from input element
-    var city = cityInputEl.value.trim();
-    if (city) {
+    var cityString = cityInputEl.value.trim();
+
+    var city = cityString.split(",")[0];
+    var state = cityString.split(",")[1];
+    var countryCode = (cityString.split(",")[2] || "US");
+
+    var queryString = city + "," + state + "," + countryCode;
+    if (queryString) {
         // if not null pass input into getCoordinates 
         // Note this does not check whether city is a valid city
-        getCoordinates(city);
-        addSearchHistory(city);
+        getCoordinates(queryString);
         // clear form 
         cityInputEl.value = "";
     }
@@ -204,4 +237,4 @@ cityFormEl.addEventListener("submit", formSubmitHandler);
 cityListEl.addEventListener("click", savedCitySearch);
 
 // Default city when the page first loads
-getCoordinates("Salt Lake City");
+getWeather(-111.8911, 40.7608, "Salt Lake City, UT");
