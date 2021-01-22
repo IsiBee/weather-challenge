@@ -144,6 +144,7 @@ function displayForecast(weatherObj) {
         // create a span element to hold the temp
         var tempEl = document.createElement("span");
         tempEl.textContent = "Temp: " + weatherObj[i].temp.day + " °F";
+        tempEl.className = "mb-2";
 
         // create a span element to hold humidity
         var humidityEl = document.createElement("span");
