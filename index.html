@@ -13,16 +13,20 @@
 
 <body>
     <header class="nav bg-dark text-light justify-content-center">
-        <h1>The Weather Vane</h1>
+        <h1>
+            <span class="mr-3"><i class="fas fa-arrows-alt"></i></span>
+            The Weather Vane
+            <span class="ml-3"><i class="fas fa-arrows-alt"></i></span>
+        </h1>
     </header>
 
     <main class="row justify-space-between">
         <div class="col-12 col-md-4">
             <div class="card card-header">
                 <h4>Search for a City:</h4>
-                <form id="city-form" class="row mb-5">
+                <form id="city-form" class="row mb-4">
                     <div class="col-8 form-inline input-group">
-                            <input type="text" class="form-control" id="city-search" placeholder="City"/>
+                        <input type="text" class="form-control" id="city-search" placeholder="City" />
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
                         </div>

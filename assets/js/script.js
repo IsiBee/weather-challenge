@@ -68,7 +68,15 @@ function displayCurrentWeather(weatherObj, city) {
     windEl.textContent = "Wind Speed: " + weatherObj.wind_speed + " MPH";
 
     var uviEl = document.createElement("p");
-    uviEl.textContent = "UV Index: " + weatherObj.uvi;
+    uviEl.textContent = "UV Index: ";
+
+    var uviContentEl = document.createElement("span");
+    uviContentEl.textContent = weatherObj.uvi;
+
+    uviContentEl.classList = "";
+    uviContentEl.classList = (uvScale(weatherObj.uvi) + " col-3 py-2");
+
+    uviEl.appendChild(uviContentEl);
 
     // add elements to the page
     titleEl.appendChild(currentIconEl);
@@ -77,6 +85,19 @@ function displayCurrentWeather(weatherObj, city) {
     currWeatherContainerEl.appendChild(humidityEl);
     currWeatherContainerEl.appendChild(windEl);
     currWeatherContainerEl.appendChild(uviEl);
+};
+
+
+function uvScale(uvIndex){
+    if(Math.floor(uvIndex) <= 2){
+        return "bg-success text-light";
+    }
+    else if(Math.floor(uvIndex) <= 7){
+        return "bg-warning text-dark";
+    }
+    else{
+        return "bg-danger text-light";
+    }
 };
 
 // Display 5 Day Weather forecast
@@ -100,7 +121,7 @@ function displayForecast(weatherObj) {
         forecastEl.classList = "col-12 col-md-2 card card-body bg-primary text-light justify-space-between ml-4 mt-4 justify-content-center";
 
         // create a h5 element to hold the date
-        var dateEl = document.createElement("h5");
+        var dateEl = document.createElement("h6");
         dateEl.textContent = date;
 
         // get icon from weather object
@@ -140,6 +161,7 @@ function displayForecast(weatherObj) {
 
 };
 
+// adds searched city to the list of saved cities
 function addSearchHistory(city) {
     // create a list element
     var saveCity = document.createElement("li");
@@ -151,6 +173,7 @@ function addSearchHistory(city) {
 
 };
 
+// when the user clicks on a saved city the app will get the city's weather 
 function savedCitySearch(event){
     var city = event.target.textContent;
     getCoordinates(city);
@@ -175,7 +198,9 @@ function formSubmitHandler(event) {
     }
 };
 
+// Event Listeners
 cityFormEl.addEventListener("submit", formSubmitHandler);
 cityListEl.addEventListener("click", savedCitySearch);
 
+// Default city when the page first loads
 getCoordinates("Salt Lake City");
