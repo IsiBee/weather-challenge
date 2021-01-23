@@ -10,7 +10,7 @@ var storedCities = [];
 
 // Uses the Current Weather API to get the city lon and lat coordinates
 function getCoordinates(city) {
-    var apiUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=6b2382b59ee5c3585d2c8565974577ef";
+    var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=6b2382b59ee5c3585d2c8565974577ef";
     fetch(apiUrl).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
@@ -59,7 +59,7 @@ function displayCurrentWeather(weatherObj, cityString) {
     var currentIcon = weatherObj.weather[0].icon;
     var altText = weatherObj.weather[0].description;
     // insert code into image url
-    var currentIconSrc = "http://openweathermap.org/img/wn/" + currentIcon + "@2x.png";
+    var currentIconSrc = "https://openweathermap.org/img/wn/" + currentIcon + "@2x.png";
     // create image element
     var currentIconEl = document.createElement("img");
     // set src
@@ -150,7 +150,7 @@ function displayForecast(weatherObj) {
         // get icon from weather object
         var forecastIcon = weatherObj[i].weather[0].icon;
         var forecastAlt = weatherObj[i].weather[0].description;
-        var forecastIconSrc = "http://openweathermap.org/img/wn/" + forecastIcon + "@2x.png";
+        var forecastIconSrc = "https://openweathermap.org/img/wn/" + forecastIcon + "@2x.png";
 
         // create img element to hold icon
         var iconEl = document.createElement("img");
