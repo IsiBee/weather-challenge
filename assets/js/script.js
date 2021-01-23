@@ -6,6 +6,7 @@ var cityFormEl = document.querySelector("#city-form");
 var cityInputEl = document.querySelector("#city-search");
 var cityListEl = document.querySelector("#city-list");
 
+var storedCities = [];
 
 // Uses the Current Weather API to get the city lon and lat coordinates
 function getCoordinates(city) {
@@ -13,29 +14,16 @@ function getCoordinates(city) {
     fetch(apiUrl).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
-                debugger;
-                var cityString = city.split(",")[0];
-                var stateString = city.split(",")[1];
-                var stringy = cityString + ", " + stateString;
-                if(stateString === "undefined"){
-                    getWeather(data.coord.lon, data.coord.lat, cityString);
-                    addSearchHistory(cityString);
-                }
-                else{
-                    getWeather(data.coord.lon, data.coord.lat, stringy);
-                    addSearchHistory(stringy);
-                }
-                
+                getWeather(data.coord.lon, data.coord.lat, city);
             });
         }
         else {
-            var cityString = city.split(",")[0];
-            alert("Hmmm we can't seem to find " + cityString + " on the map. Please try another city.");
+            alert("Hmmm we can't seem to find " + city + " on the map. Please try another city.");
         }
     })
-    .catch(function(error){
-        alert("We are unable to connect to OpenWeather's Weather Vane at the moment.");
-    });
+        .catch(function (error) {
+            alert("We are unable to connect to OpenWeather's Weather Vane at the moment.");
+        });
 };
 
 // Uses the coordinates from getCoordinates call to get the current weather
@@ -53,9 +41,9 @@ function getWeather(lon, lat, city) {
             alert("Please enter a valid city name");
         }
     })
-    .catch(function(error){
-        alert("We are unable to connect to OpenWeather.")
-    });
+        .catch(function (error) {
+            alert("We are unable to connect to OpenWeather.")
+        });
 };
 
 // Display Current Weather to the screen
@@ -81,8 +69,16 @@ function displayCurrentWeather(weatherObj, cityString) {
 
     // create city/date h3 element
     var titleEl = document.createElement("h3");
-    titleEl.textContent = cityString + " (" + date + ")";
+    // Remove US from city string
+    var city = cityString.split(",")[0];
+    var state = cityString.split(",")[1];
 
+    if (state === " US" || state === undefined) {
+        titleEl.textContent = city + " (" + date + ")";
+    }
+    else {
+        titleEl.textContent = city + ", " + state + " (" + date + ")";
+    }
     // create weather elements
     var tempEl = document.createElement("p");
     tempEl.textContent = "Temperature: " + weatherObj.temp + " °F";
@@ -115,14 +111,14 @@ function displayCurrentWeather(weatherObj, cityString) {
 
 // Takes in a UV Index and determines whether it's low, moderate, or high
 // The function returns Bootstrap class names to properly color the span element.
-function uvScale(uvIndex){
-    if(Math.floor(uvIndex) <= 2){
+function uvScale(uvIndex) {
+    if (Math.floor(uvIndex) <= 2) {
         return "bg-success text-light";
     }
-    else if(Math.floor(uvIndex) <= 7){
+    else if (Math.floor(uvIndex) <= 7) {
         return "bg-warning text-dark";
     }
-    else{
+    else {
         return "bg-danger text-light";
     }
 };
@@ -196,17 +192,37 @@ function addSearchHistory(city) {
     saveCity.classList = "list-group-item";
     saveCity.textContent = city;
 
+    // add city to local storage
+    storedCities.push(city);
+    localStorage.setItem("cities", JSON.stringify(storedCities));
+
     // add city to the screen
     cityListEl.appendChild(saveCity);
 
 };
 
 // when the user clicks on a saved city the app will get the city's weather 
-function savedCitySearch(event){
+function savedCitySearch(event) {
     var city = event.target.textContent;
     var queryString = city + ", US";
     getCoordinates(queryString);
-}
+};
+
+function displaySavedCities() {
+    // get cities from local storage
+    storedCities = JSON.parse(localStorage.getItem("cities"));
+    if (!storedCities) {
+        storedCities = [];
+    }
+    // create li elements for each city
+    for (var i = 0; i < storedCities.length; i++) {
+        var savedCity = document.createElement("li");
+        savedCity.classList = "list-group-item";
+        savedCity.textContent = storedCities[i];
+        cityListEl.appendChild(savedCity);
+    }
+
+};
 
 // When the user clicks search the contents of the form will be used to getCoordinates.
 function formSubmitHandler(event) {
@@ -218,18 +234,37 @@ function formSubmitHandler(event) {
     var state = cityString.split(",")[1];
     var countryCode = (cityString.split(",")[2] || "US");
 
-    var queryString = city + "," + state + "," + countryCode;
-    if (queryString) {
-        // if not null pass input into getCoordinates 
-        // Note this does not check whether city is a valid city
-        getCoordinates(queryString);
-        // clear form 
-        cityInputEl.value = "";
+    if (state === undefined) {
+        if (cityString) {
+            // if not null pass input into getCoordinates 
+            // Note this does not check whether city is a valid city
+            getCoordinates(city);
+            addSearchHistory(city);
+            // clear form 
+            cityInputEl.value = "";
+        }
+        else {
+            // if form is left blank we will alert the user to enter a city name
+            alert("Please enter a city name");
+        }
+
     }
+
     else {
-        // if form is left blank we will alert the user to enter a city name
-        alert("Please enter a city name");
+        var queryString = city + ", " + state + ", " + countryCode;
+        if (queryString) {
+            getCoordinates(queryString);
+            addSearchHistory(city + ", " + state);
+
+            cityInputEl.value = "";
+        }
+        else {
+            // if form is left blank we will alert the user to enter a city name
+            alert("Please enter a city name");
+        }
     }
+
+
 };
 
 // Event Listeners
@@ -238,3 +273,4 @@ cityListEl.addEventListener("click", savedCitySearch);
 
 // Default city when the page first loads
 getWeather(-111.8911, 40.7608, "Salt Lake City, UT");
+displaySavedCities();
