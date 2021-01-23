@@ -35,7 +35,7 @@ This challenge was a lot of fun. The fetch method and parsing the response objec
 
 ### Access Application
 
-You can find the scheduler here:
+You can find the weather app here:
 *  https://isibee.github.io/weather-challenge/
 
 You can find the code here:
